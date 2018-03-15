@@ -57,7 +57,7 @@ def padic(a,p):
 
 
 ##################################################################
-##  Rubin's witness of non-primality                            ##
+##  Rabin's witness of non-primality                            ##
 ##  input:      integer a, possible witness integer x           ##
 ##  output:     'probably prime' or 'composite', according to x ##
 ##################################################################
@@ -127,7 +127,7 @@ def SmallPrimes(X):
 
 
 ##################################################################
-##  probabilistic primality test (Rubin)                        ##
+##  probabilistic primality test (Rabin)                        ##
 ##  input:      integer a                                       ##
 ##  output:     'prime' or 'composite'                          ##
 ##  note:       for large n, it is only deciding whether a is   ##
