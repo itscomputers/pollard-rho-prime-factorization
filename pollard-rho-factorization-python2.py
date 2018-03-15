@@ -2,8 +2,13 @@
 ##  factorization into primes.  
 
 
+
+
+
 from __future__ import print_function
 from random import randint
+
+
 
 
 
@@ -19,14 +24,13 @@ def gcd(_a,_b):
     if a % b == 0:
         return b
     while b != 0:
-        r = a % b
-        if r > b/2:
-            r -= b
+        r = min( a % b, b - a % b )
         a = b
-        b = abs(r)
+        b = r
     return a
 
 ##################################################################
+
 
 
 
@@ -48,34 +52,6 @@ def padic(a,p):
 
 ##################################################################
 
-
-
-
-##################################################################
-##  smallprimes function                                        ##
-##  input:      upper bound X                                   ##
-##  output:     list of primes < X                              ##
-##  method:     sieve of eratosthanes                           ##
-##  warning:    the method is slow/inefficient if X > 10000     ##
-##################################################################
-
-def smallprimes(X):
-    prime_list = []
-    number_list = [ j for j in range(2,X) ]
-    while len(number_list) > 0:
-        p = number_list[0]
-        if p ** 2 >= X:
-            for n in number_list:
-                number_list.remove(n)
-                prime_list.append(n)
-        else:
-            for n in number_list:
-                if n % p == 0:
-                    number_list.remove(n)
-            prime_list.append(p)
-    return prime_list
-
-##################################################################
 
 
 
@@ -106,29 +82,79 @@ def witness(a,x):
 
 
 
+
 ##################################################################
-##  probabilistic primality test (Rubin)                        ##
-##  input:      integer a, number of witnesses n                ##
-##  output:     'prime' or 'composite'                          ##
-##  note:       for n < a-3, it is only deciding whether a is   ##
-##              probably prime or composite.  for n > a-4,      ##
-##              it is determining with certainty its primality. ##
-##              for simplicity, i have it returning 'prime'     ##
-##              in both cases, although usually this means      ##
-##              probably prime.                                 ##
-##  note:       the probability is provably > 1 - (1/4)^n       ##
-##              but actually much better.  in practice,         ##
-##              for large n, 5 witnesses seems to give accurate ##
-##              results nearly all of the time, so i have       ##
-##              opted for 10 witnesses to be safe.              ##
+##  Generate a list of primes up to X                           ##
+##  input:      X (must be less than 10**10)                    ##
+##  output:     list of primes < X                              ##
+##  note:       uses Rabin's witness function with              ##
+##              pre-specified bases that determine primality    ##
+##  note:       still slow for X > 10^7, but still faster than  ##
+##              with the sieve of Eratosthenes                  ##
 ##################################################################
 
-def probprime(a,n):
-    if n > a-4:
-        witnesses = [ j for j in range(2,a-1) ]
-    else:
+def SmallPrimes(X):
+    P = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+    if X < 31:
+        return P
+    if 30 < X < 2047:
+        B = [2]
+    if 2046 < X < 1373653:
+        B = [2, 3]
+    if 1373652 < X < 25326001:
+        B = [2, 3, 5]
+    if 25326000 < X < 10**10:
+        B = [2, 3, 5, 7]
+    if X > 10**10:
+        return 'error: input too large'
+    S = [1, 7, 11, 13, 17, 19, 23, 29]
+    for r in range(30,X,30):
+        for s in S:
+            if r + s < X:
+                count = 0
+                for x in B:
+                    if witness(r+s,x) == 'composite':
+                        count += 1
+                        break
+                if count == 0:
+                    P.append(r+s)
+    return P
+
+##################################################################
+
+
+
+
+
+##################################################################
+##  probabilistic primality test (Rubin)                        ##
+##  input:      integer a                                       ##
+##  output:     'prime' or 'composite'                          ##
+##  note:       for large n, it is only deciding whether a is   ##
+##              probably prime or composite using 10 witnesses. ##
+##              for small n, it is is determining its primality ##
+##              with certainty.                                 ##
+##  note:       the probability is provably > 1 - (1/4)^n       ##
+##################################################################
+
+def probprime(a):
+    if a < 2047:
+        witnesses = [2]
+    if 2046 < a < 1373653:
+        witnesses = [2, 3]
+    if 1373652 < a < 25326001:
+        witnesses = [2, 3, 5]
+    if 25326000 < a < 3215031751:
+        witnesses = [2, 3, 5, 7]
+    if 3215031750 < a < 2152302898747:
+        witnesses = [2, 3, 5, 7, 11]
+    if 2152302898746 < a < 3474749660383:
+        witnesses = [2, 3, 5, 7, 11, 13]
+    if 3474749660383 < a < 341550071728321:
+        witnesses = [2, 3, 5, 7, 11, 13, 17]
+    if a > 341550071728321:
         witnesses = []
-        while len(witnesses) < n:
+        while len(witnesses) < 10:
             x = randint( 2, a-1 )
             if x not in witnesses:
                 witnesses.append(x)
@@ -200,7 +226,7 @@ def find_factor(a):
 ##  testing.  i have chosen primes <1000 and 10 witnesses.      ##
 ##################################################################
 
-SP = smallprimes(1000)
+SP = SmallPrimes(1000)
 
 ##################################################################
 
@@ -227,14 +253,14 @@ def factor(_a):
             a = z[1]
             if a == 1:
                 return prime_factors
-    if probprime(a,10) == 'prime':
+    if probprime(a) == 'prime':
         prime_factors.append( a )
         unfactored = []
     else:
         unfactored = [ a ]
     while len(unfactored) > 0:
         b = unfactored[0]
-        if probprime(b,10) == 'prime':
+        if probprime(b) == 'prime':
             unfactored.remove(b)
             prime_factors.append(b)
         else:
@@ -244,7 +270,7 @@ def factor(_a):
             else:
                 unfactored.remove(b)
                 for c in [ d, b // d ]:
-                    if probprime(c,10) == 'prime':
+                    if probprime(c) == 'prime':
                         prime_factors.append(c)
                     else:
                         unfactored.append(c)
@@ -279,7 +305,6 @@ def factor_print(a):
 
 
 
-
 ##################################################################
 ##  a simple prompt to factor a desired integer or to factor    ##
 ##  a list of random integers.                                  ##
@@ -307,7 +332,6 @@ while 1 > 0:
     except ValueError:
         print()
 ##################################################################
-
 
 
 
