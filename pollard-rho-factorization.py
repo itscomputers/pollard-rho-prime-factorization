@@ -3,11 +3,38 @@
 
 
 
-
-
 from random import randint
 
 
+
+##################################################################
+##  a simple prompt to factor a desired integer or to factor    ##
+##  a list of random integers.                                  ##
+##################################################################
+
+def menu():
+    while 1 > 0:
+        print()
+        print( 'choose an option below:' )
+        print( '   enter a positive integer you would like factored;' )
+        print( '   enter 0 to factor 30 random integers;' )
+        print( '   or anything else to quit.' )
+        print()
+        z = input()
+        print()
+        try:
+            Z = int(z)
+            if Z == 0:
+                for k in range(6,21):
+                    for i in range(2):
+                        n = randint(10**k,10**(k+1))
+                        factor_print(n)
+            else:
+                factor_print( abs(Z) )
+        except ValueError:
+            break
+
+##################################################################
 
 
 
@@ -32,8 +59,6 @@ def gcd(_a,_b):
 
 
 
-
-
 ##################################################################
 ##  p-adic representation                                       ##
 ##  input:      integer _a and prime p                          ##
@@ -50,8 +75,6 @@ def padic(a,p):
     return [ e, a ]
 
 ##################################################################
-
-
 
 
 
@@ -77,51 +100,6 @@ def witness(a,x):
     return 'composite'
 
 ##################################################################
-
-
-
-
-
-##################################################################
-##  Generate a list of primes up to X                           ##
-##  input:      X (must be less than 10**10)                    ##
-##  output:     list of primes < X                              ##
-##  note:       uses Rabin's witness function with              ##
-##              pre-specified bases that determine primality    ##
-##  note:       still slow for X > 10^7, but still faster than  ##
-##              with the sieve of Eratosthenes                  ##
-##################################################################
-
-def SmallPrimes(X):
-    P = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-    if X < 31:
-        return P
-    if 30 < X < 2047:
-        B = [2]
-    if 2046 < X < 1373653:
-        B = [2, 3]
-    if 1373652 < X < 25326001:
-        B = [2, 3, 5]
-    if 25326000 < X < 10**10:
-        B = [2, 3, 5, 7]
-    if X > 10**10:
-        return 'error: input too large'
-    S = [1, 7, 11, 13, 17, 19, 23, 29]
-    for r in range(30,X,30):
-        for s in S:
-            if r + s < X:
-                count = 0
-                for x in B:
-                    if witness(r+s,x) == 'composite':
-                        count += 1
-                        break
-                if count == 0:
-                    P.append(r+s)
-    return P
-
-##################################################################
-
-
 
 
 
@@ -167,7 +145,6 @@ def probprime(a):
 
 
 
-
 ##################################################################
 ##  Pollard-rho factor-finding algorithm                        ##
 ##      with polynomial x^2 + n                                 ##
@@ -189,7 +166,6 @@ def pollard(a,x0,n):
     return d
 
 ##################################################################
-
 
 
 
@@ -217,19 +193,31 @@ def find_factor(a):
 
 
 
-
-
 ##################################################################
 ##  for primality testing, we need to make some list of small   ##
 ##  primes and to pick a number of witnesses for primality      ##
-##  testing.  i have chosen primes <1000 and 10 witnesses.      ##
+##  testing.  i have chosen primes <1000.  instead of           ##
+##  generating the list each time, it's probably better to      ##
+##  have a static list.                                         ##
 ##################################################################
 
-SP = SmallPrimes(1000)
+SP =    [   2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 
+            47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 
+            107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 
+            167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 
+            229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 
+            283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 
+            359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 
+            431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 
+            491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 
+            571, 577, 587, 593, 599, 601, 607, 613, 617, 619, 631, 
+            641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701, 
+            709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 
+            787, 797, 809, 811, 821, 823, 827, 829, 839, 853, 857, 
+            859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 
+            941, 947, 953, 967, 971, 977, 983, 991, 997         ]
 
 ##################################################################
-
-
 
 
 
@@ -279,8 +267,6 @@ def factor(_a):
 
 
 
-
-
 ##################################################################
 ##  print factorization                                         ##
 ##  input:      integer a                                       ##
@@ -303,39 +289,10 @@ def factor_print(a):
 
 
 
-
 ##################################################################
-##  a simple prompt to factor a desired integer or to factor    ##
-##  a list of random integers.                                  ##
+##  call the menu                                               ##
 ##################################################################
 
-while 1 > 0:
-    print()
-    print( 'choose an option below:' )
-    print( '   enter an integer you would like factored;' )
-    print( '   "r" to factor 30 random integers;' )
-    print( '   "q" to quit.' )
-    print()
-    z = input()
-    print()
-    if z == 'r':
-        for k in range(6,21):
-            for i in range(2):
-                n = randint(10**k,10**(k+1))
-                factor_print(n)
-    if z == 'q':
-        break
-    try:
-        Z = int(z)
-        factor_print(Z)
-    except ValueError:
-        print()
-##################################################################
+menu()
 
-
-
-
-##################################################################
-##################################################################
-##################################################################
 ##################################################################
