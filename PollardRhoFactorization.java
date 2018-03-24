@@ -24,7 +24,7 @@ public class PollardRhoFactorization {
 	    choice = br.readLine();
 	    System.out.println( );
 	    
-	    if ( prf.isInteger( choice ) ) {
+	    if ( prf.isBigInteger( choice ) ) {
 		BigInteger c = new BigInteger( choice );
 	
 		if ( c.intValue() == 0 ) {
@@ -53,7 +53,7 @@ public class PollardRhoFactorization {
 
     /* this is to test whether a string represents an integer
      */
-    boolean isInteger( String s ) {
+    boolean isBigInteger( String s ) {
 	int l = s.length();
 	if ( l == 0 ) return false;
 	for ( int j = 0; j < l; j++ ) {
