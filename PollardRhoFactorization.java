@@ -8,6 +8,8 @@ public class PollardRhoFactorization {
     
     public static void main( String args[] ) throws IOException {
 	
+	PollardRhoFactorization prf = new PollardRhoFactorization();
+
 	BufferedReader br = new BufferedReader( new InputStreamReader( System.in ) );
 
 	String choice;
@@ -22,21 +24,23 @@ public class PollardRhoFactorization {
 	    choice = br.readLine();
 	    System.out.println( );
 	    
-	    if ( isInteger( choice ) ) {
+	    if ( prf.isInteger( choice ) ) {
 		BigInteger c = new BigInteger( choice );
 	
 		if ( c.intValue() == 0 ) {
 		    Random rnd = new Random();
-		    BigInteger v;
+		    BigInteger x;
+		    BigInteger y = new BigInteger("2");
 		    for( int j = 17; j < 62; j += 3 ) {
 			for( int i = 0; i < 2; i++ ) {
-			    v = new BigInteger( j, rnd);
-			    factorPrint( v );
+			    x = new BigInteger( j, rnd );
+			    y = y.add( x );
+			    prf.factorPrint( y );
 			}
 		    }
 		    System.out.println( );
 		} else {
-		    factorPrint( c );
+		    prf.factorPrint( c );
 		    System.out.println( );
 		}
 	    } else {
@@ -49,7 +53,7 @@ public class PollardRhoFactorization {
 
     /* this is to test whether a string represents an integer
      */
-    static boolean isInteger( String s ) {
+    boolean isInteger( String s ) {
 	int l = s.length();
 	if ( l == 0 ) return false;
 	for ( int j = 0; j < l; j++ ) {
@@ -69,7 +73,7 @@ public class PollardRhoFactorization {
      * input:	    integers a, b
      * output:	    gcd(a,b)				
      */
-    static BigInteger gcd( BigInteger a, BigInteger b ) {
+    BigInteger gcd( BigInteger a, BigInteger b ) {
 	a = a.abs();
 	b = b.abs();
 	
@@ -88,7 +92,7 @@ public class PollardRhoFactorization {
      * input:	    integer a and prime p
      * output:	    {e, b} with a = p^e * b
      */
-    static ArrayList<BigInteger> padic( BigInteger a, BigInteger p ) {
+    ArrayList<BigInteger> padic( BigInteger a, BigInteger p ) {
 	BigInteger e = new BigInteger("0");
 	
 	while ( ( a.mod(p) ).equals( BigInteger.ZERO ) ) {
@@ -107,7 +111,7 @@ public class PollardRhoFactorization {
      * output:	    'probably prime' or 'composite',
      *		    according to a
      */
-    static String witness( BigInteger a, BigInteger x ) {
+    String witness( BigInteger a, BigInteger x ) {
 	BigInteger two = new BigInteger("2");
 	BigInteger a1 = a.subtract(BigInteger.ONE);
 	
@@ -144,7 +148,7 @@ public class PollardRhoFactorization {
      *			the right answer with probability
      *			greater than 1 - (.25)^10
      */
-    static String probPrime( BigInteger a ) {
+    String probPrime( BigInteger a ) {
 	ArrayList<BigInteger> witnesses = new ArrayList<BigInteger>();
 
 	BigInteger bd1, bd2, bd3, bd4, bd5, bd6, bd7;
@@ -197,7 +201,7 @@ public class PollardRhoFactorization {
      * is more efficient to have the list explicitly defined
      * instead of generated each time the class is called.
      */
-    static int[] smallPrimes = { 
+    int[] smallPrimes = { 
 	2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 
 	59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 
 	127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 
@@ -220,7 +224,7 @@ public class PollardRhoFactorization {
      * input:	    integers a, x, n
      * output:	    ( x^2 + n ) % a
      */
-    static BigInteger pollardFunction( BigInteger a, BigInteger x, BigInteger n ) {
+    BigInteger pollardFunction( BigInteger a, BigInteger x, BigInteger n ) {
 	return ( ( x.multiply(x) ).add(n) ).mod(a);
     }
 
@@ -231,7 +235,7 @@ public class PollardRhoFactorization {
      * output:	    either a nontrivial factor of a or a itself 
      * note:	    1 < d <= a, so it might not give
      */
-    static BigInteger pollard( BigInteger a, int x, int n ) {
+    BigInteger pollard( BigInteger a, int x, int n ) {
 	BigInteger X = BigInteger.valueOf(x);
 	BigInteger N = BigInteger.valueOf(n);
 
@@ -257,7 +261,7 @@ public class PollardRhoFactorization {
      *		    terms seem to be both fast and complete.
      *		    i have yet to receive the error message.
      */
-    static BigInteger findFactor( BigInteger a ) {
+    BigInteger findFactor( BigInteger a ) {
 	int[] constantTerms = {1, 2, -1};
 	int[] seeds = {2, 3, 5, 6, 8};
 	for ( int n : constantTerms ) {
@@ -278,7 +282,7 @@ public class PollardRhoFactorization {
      * input:	    integer a
      * output:	    sorted list of prime factors of a
      */
-    static ArrayList<BigInteger> factor( BigInteger a ) {
+    ArrayList<BigInteger> factor( BigInteger a ) {
 	ArrayList<BigInteger> primeFactors = new ArrayList<BigInteger>();
 	a = a.abs();
 	if ( a.equals(BigInteger.ZERO) || a.equals(BigInteger.ONE) ) {
@@ -335,7 +339,7 @@ public class PollardRhoFactorization {
      * input:	    integer a
      * output:	    none, but prints factorization
      */
-    static void factorPrint( BigInteger a ) {
+    void factorPrint( BigInteger a ) {
 	ArrayList<BigInteger> F = factor(a);
 	ArrayList<String> Fexp = new ArrayList<String>();
 	for ( BigInteger p : F ) {
@@ -343,7 +347,7 @@ public class PollardRhoFactorization {
 	    if ( e == 1 ) Fexp.add( String.valueOf( p ) );
 	    else Fexp.add( String.valueOf( p ) + "^" + String.valueOf( e ) );
 	}
-	System.out.print( a + " = " );
+	System.out.print( a.abs() + " = " );
 	int l = Fexp.size();
 	for ( int j = 0; j < l-1; j++ ) {
 	    System.out.print( Fexp.get(j) + " * " );
