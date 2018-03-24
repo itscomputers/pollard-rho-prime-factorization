@@ -1,10 +1,9 @@
-##  Python3 implementation of the Pollard rho method for
+##  Python2 implementation of the Pollard rho method for
 ##  factorization into primes.  
 
 
 from __future__ import print_function
 from random import randint
-
 
 
 ##################################################################
@@ -37,7 +36,6 @@ def menu():
 ##################################################################
 
 
-
 ##################################################################
 ##  greatest common divisor                                     ##
 ##  input:      integers _a, _b                                 ##
@@ -58,7 +56,6 @@ def gcd(_a,_b):
 ##################################################################
 
 
-
 ##################################################################
 ##  p-adic representation                                       ##
 ##  input:      integer _a and prime p                          ##
@@ -75,7 +72,6 @@ def padic(a,p):
     return [ e, a ]
 
 ##################################################################
-
 
 
 ##################################################################
@@ -102,16 +98,15 @@ def witness(a,x):
 ##################################################################
 
 
-
 ##################################################################
 ##  probabilistic primality test (Rabin)                        ##
 ##  input:      integer a                                       ##
 ##  output:     'prime' or 'composite'                          ##
-##  note:       for large n, it is only deciding whether a is   ##
+##  note:       for large a, it is only deciding whether a is   ##
 ##              probably prime or composite using 10 witnesses. ##
-##              for small n, it is is determining its primality ##
-##              with certainty.                                 ##
-##  note:       the probability is provably > 1 - (1/4)^n       ##
+##              for small a, it is is determining its primality ##
+##              with absolute certainty.                        ##
+##  note:       the probability is provably > 1 - (1/4)^10      ##
 ##################################################################
 
 def probprime(a):
@@ -144,7 +139,6 @@ def probprime(a):
 ##################################################################
 
 
-
 ##################################################################
 ##  Pollard-rho factor-finding algorithm                        ##
 ##      with polynomial x^2 + n                                 ##
@@ -166,7 +160,6 @@ def pollard(a,x0,n):
     return d
 
 ##################################################################
-
 
 
 ##################################################################
@@ -192,13 +185,10 @@ def find_factor(a):
 ##################################################################
 
 
-
 ##################################################################
 ##  for primality testing, we need to make some list of small   ##
-##  primes and to pick a number of witnesses for primality      ##
-##  testing.  i have chosen primes <1000.  instead of           ##
-##  generating the list each time, it's probably better to      ##
-##  have a static list.                                         ##
+##  primes, say primes <1000.  instead of generating the list   ##
+##  each time, it's probably better to have a static list.      ##
 ##################################################################
 
 SP =    [   2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 
@@ -218,7 +208,6 @@ SP =    [   2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
             941, 947, 953, 967, 971, 977, 983, 991, 997         ]
 
 ##################################################################
-
 
 
 ##################################################################
@@ -266,7 +255,6 @@ def factor(_a):
 ##################################################################
 
 
-
 ##################################################################
 ##  print factorization                                         ##
 ##  input:      integer a                                       ##
@@ -286,7 +274,6 @@ def factor_print(a):
     print( *Fexp, sep = ' * ' )
 
 ##################################################################
-
 
 
 ##################################################################
