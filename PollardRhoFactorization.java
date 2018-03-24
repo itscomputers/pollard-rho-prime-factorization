@@ -2,9 +2,7 @@ import java.io.*;
 import java.util.*;
 import java.math.*;
 
-
 public class PollardRhoFactorization {
-
     
     public static void main( String args[] ) throws IOException {
 	
@@ -50,7 +48,6 @@ public class PollardRhoFactorization {
     }
 
 
-
     /* this is to test whether a string represents an integer
      */
     boolean isBigInteger( String s ) {
@@ -67,7 +64,6 @@ public class PollardRhoFactorization {
 	return true;
     }
     
-
 
     /* greatest common divisor function
      * input:	    integers a, b
@@ -87,7 +83,6 @@ public class PollardRhoFactorization {
     }
 
 
-
     /* p-adic representation
      * input:	    integer a and prime p
      * output:	    {e, b} with a = p^e * b
@@ -103,7 +98,6 @@ public class PollardRhoFactorization {
 	ArrayList<BigInteger> output = new ArrayList<BigInteger>( List.of(e,a) );
 	return output;
     }
-
 
 
     /* Rabin's witness of non-primality
@@ -135,7 +129,6 @@ public class PollardRhoFactorization {
 	}
 	return "composite";
     }
-
 
 
     /* Probabilistic primality test
@@ -229,11 +222,9 @@ public class PollardRhoFactorization {
     }
 
 
-
     /* Pollard's rho algorithm for finding a factor of a
-     * input:	    integer a, initial seed n, constant term n
+     * input:	    integer a, initial seed x, constant term n
      * output:	    either a nontrivial factor of a or a itself 
-     * note:	    1 < d <= a, so it might not give
      */
     BigInteger pollard( BigInteger a, int x, int n ) {
 	BigInteger X = BigInteger.valueOf(x);
@@ -250,7 +241,6 @@ public class PollardRhoFactorization {
 	}
 	return d;
     }
-
 
 
     /* factor-finding algorithm using varying seeds/polynomials
@@ -277,10 +267,9 @@ public class PollardRhoFactorization {
     }
 
 
-
     /* factoring algorithm
      * input:	    integer a
-     * output:	    sorted list of prime factors of a
+     * output:	    list of prime factors of a
      */
     ArrayList<BigInteger> factor( BigInteger a ) {
 	ArrayList<BigInteger> primeFactors = new ArrayList<BigInteger>();
@@ -334,7 +323,6 @@ public class PollardRhoFactorization {
     }
 
 
-
     /* print factorization
      * input:	    integer a
      * output:	    none, but prints factorization
@@ -358,22 +346,6 @@ public class PollardRhoFactorization {
 	System.out.println( Fexp.get(l-1) );
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
