@@ -328,8 +328,8 @@ public class PollardRhoFactorization {
 		    }
 		}
 	    }
-	    Collections.sort(primeFactors);
 	    return primeFactors;
+	    
 	}
     }
 
@@ -341,11 +341,14 @@ public class PollardRhoFactorization {
      */
     void factorPrint( BigInteger a ) {
 	ArrayList<BigInteger> F = factor(a);
+	Set<BigInteger> primeFactors = new HashSet<BigInteger>( F );
 	ArrayList<String> Fexp = new ArrayList<String>();
-	for ( BigInteger p : F ) {
+	while ( !( primeFactors.isEmpty() ) ) {
+	    BigInteger p = Collections.min( primeFactors );
 	    int e = Collections.frequency( F, p );
 	    if ( e == 1 ) Fexp.add( String.valueOf( p ) );
 	    else Fexp.add( String.valueOf( p ) + "^" + String.valueOf( e ) );
+	    primeFactors.remove( p );
 	}
 	System.out.print( a.abs() + " = " );
 	int l = Fexp.size();
