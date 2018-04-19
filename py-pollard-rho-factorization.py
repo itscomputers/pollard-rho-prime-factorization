@@ -1,9 +1,15 @@
 
-##  written for python3
 ##  Pollard's rho algorithm used for factorization into primes.  
+##  written by itscomputers for python 3 (python 2 compatible)
 
-
+from __future__ import print_function
 from random import randint
+
+try:
+    input = raw_input
+except NameError:
+    pass
+
 
 
 ##################################################################
